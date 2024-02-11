@@ -102,3 +102,6 @@ END;
 
 SELECT CalculateYearlyReward(5000, 10) FROM dual;
 
+CREATE USER c##Labs IDENTIFIED BY pass091103;
+grant connect to c##Labs;
+grant all privileges to c##Labs;
