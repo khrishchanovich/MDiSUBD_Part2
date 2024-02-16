@@ -78,29 +78,39 @@ BEGIN
 END;
 
 -- TASK 6 --
-CREATE OR REPLACE FUNCTION CalculateYearlyReward(p_monthly_salary IN NUMBER, p_annual_bonus_percent IN NUMBER) RETURN NUMBER IS
+-- добавить проверку на строку --
+CREATE OR REPLACE FUNCTION CalculateYearlyReward(input_salary IN VARCHAR2, input_annual_percent IN VARCHAR) RETURN NUMBER IS
+    salary NUMBER;
+    annual_percent NUMBER; 
+    annual_bonus_percent NUMBER;
     annual_bonus NUMBER;
-    annual_bonus_percent NUMBER; 
 BEGIN
-    IF MOD(p_annual_bonus_percent, 1) != 0 THEN
+    IF (input_salary IS NULL OR input_annual_percent IS NULL) THEN
+        RAISE_APPLICATION_ERROR(-20003, 'Values must be not null.');
+    END IF;
+    
+    IF NOT REGEXP_LIKE(input_salary, '^[0-9]+$') OR  NOT REGEXP_LIKE(input_annual_percent, '^[0-9]+$') THEN
+        RAISE_APPLICATION_ERROR(-20004, 'Invalid input. Values must be numbers.');
+    END IF;
+    
+    salary := TO_NUMBER(input_salary);
+    annual_percent := TO_NUMBER(input_annual_percent);
+    
+    IF MOD(annual_percent, 1) != 0 THEN
         RAISE_APPLICATION_ERROR(-20002, 'Bonus percentage must be an integer value.');
     END IF;
     
-    IF p_annual_bonus_percent < 0 OR p_annual_bonus_percent > 100 THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Invalid bonus percentage. Please enter a value between 0 and 100.');
+    IF salary < 0 OR annual_percent < 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Invalid input. Values must be positiv.');
     END IF;
-
-    annual_bonus_percent := p_annual_bonus_percent / 100;
-
-    annual_bonus := (1 + annual_bonus_percent) * 12 * p_monthly_salary;
+    
+    annual_bonus_percent := annual_percent / 100;
+    annual_bonus := (1 + annual_bonus_percent) * 12 * salary;
 
     RETURN annual_bonus;
-EXCEPTION
-    WHEN VALUE_ERROR THEN
-        RAISE_APPLICATION_ERROR(-20003, 'Invalid input. Please enter a valid number.');
 END; 
 
-SELECT CalculateYearlyReward(5000, 10) FROM dual;
+SELECT CalculateYearlyReward('gsfhd', 10) FROM dual;
 
 CREATE USER c##Labs IDENTIFIED BY pass091103;
 grant connect to c##Labs;
