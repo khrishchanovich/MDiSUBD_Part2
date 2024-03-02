@@ -7,10 +7,11 @@ CREATE TABLE mytable (
 );
 
 -- TASK 2 --
+-- анонимный блок, заполняет случайными записями таблицу -- 
 DECLARE 
     i NUMBER;
 BEGIN 
-    FOR i IN 1..10000 LOOP
+    FOR i IN 1..10 LOOP
         INSERT INTO mytable (val) values (ROUND(DBMS_RANDOM.VALUE(-100, 100)));
     END LOOP;
 END;
@@ -20,6 +21,7 @@ SELECT * FROM MYTABLE;
 DELETE FROM MYTABLE;
 
 -- TASK 3 --
+-- каких значений в таблице больше (Ч или НЧ) --
 CREATE FUNCTION comparison_function RETURN VARCHAR2 IS
     count_nechet NUMBER;
     count_chet NUMBER;
@@ -47,6 +49,7 @@ SELECT comparison_function FROM dual;
 CREATE OR REPLACE FUNCTION insertcommand(input_id NUMBER) RETURN VARCHAR2 IS
     temp_id NUMBER;
     temp_val NUMBER;
+    COUNT_ NUMBER;
     text_str VARCHAR2(100);
 BEGIN
     SELECT id, val
@@ -55,11 +58,32 @@ BEGIN
     WHERE id = input_id;
     
     text_str := 'INSERT INTO mytabl (id, val) VALUES (' || temp_id || ', ' || temp_val || ')';
+    RETURN text_str;    
     
-    RETURN text_str;
-END; 
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RAISE_APPLICATION_ERROR(-20001, 'ID DOES NOT EXIST');
+END INSERTCOMMAND; 
 
-SELECT insertcommand(12) FROM dual;
+CREATE OR REPLACE FUNCTION COMM (INPUT_ID NUMBER, INPUT_VALUE NUMBER) RETURN VARCHAR2 IS
+    TEMP_ID NUMBER;
+    TEMP_VALUE NUMBER;
+    TEXT_STR VARCHAR2(100);
+    COUNT_ NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO COUNT_ FROM MYTABLE WHERE ID = INPUT_ID;
+    
+    IF COUNT_ > 0 then
+        RAISE_APPLICATION_ERROR(-20001, 'ID ALREADY EXISTS');
+    END IF;
+    IF COUNT_ = 0 THEN
+        TEXT_STR := 'INSERT INTO mytabl (id, val) VALUES (' || INPUT_ID || ', ' || INPUT_VALUE || ')';
+        RETURN TEXT_STR;
+    END IF;
+END;
+SELECT * FROM MYTABLE;
+SELECT COMM(10, 10) FROM DUAL;
+SELECT insertcommand(12000000) FROM dual;
 
 -- TASK 5 --
 CREATE PROCEDURE insertrecord (val IN NUMBER) IS
