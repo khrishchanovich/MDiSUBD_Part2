@@ -1,0 +1,1 @@
+CALL compare_schemas('DEV_SCHEMA', 'PROD_SCHEMA');

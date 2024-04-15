@@ -1,0 +1,45 @@
+<Operation>
+    <QueryType>SELECT</QueryType>
+    <OutputColumns>
+        <Column>students.id</Column>
+        <Column>students.name</Column>
+        <Column>groups.id</Column>
+    </OutputColumns>
+    <Tables>
+        <Table>students</Table>
+        <Table>groups</Table>
+    </Tables>
+    <Joins>
+        <Join>
+            <Type>LEFT JOIN</Type>
+            <Condition>groups.id = students.group_id</Condition>
+        </Join>
+    </Joins>
+    <Where>
+        <Conditions>
+            <Condition>
+                <Body>students.id = 1</Body>
+                <ConditionOperator>OR</ConditionOperator>
+            </Condition>
+            <Condition>
+                <Body>groups.name IN</Body>
+                <Operation>
+                    <QueryType>SELECT</QueryType>
+                    <OutputColumns>
+                        <Column>name</Column>
+                    </OutputColumns>
+                    <Tables>
+                        <Table>groups</Table>
+                    </Tables>
+                    <Where>
+                        <Conditions>
+                            <Condition>
+                                <Body>c_val = 3</Body>
+                            </Condition>
+                        </Conditions>
+                    </Where>
+                </Operation>
+            </Condition>
+        </Conditions>
+    </Where>
+</Operation>

@@ -1,0 +1,34 @@
+<Operation>
+    <Type>UPDATE</Type>
+    <Table>students</Table>
+    <SetOperations>
+        <Set>name = 'kate'</Set>
+    </SetOperations>
+    <Where>
+        <Conditions>
+            <Condition>
+                <Body>students.id = 5</Body>
+                <ConditionOperator>OR</ConditionOperator>
+            </Condition>
+            <Condition>
+                <Body>group_id IN</Body>
+                <Operation>
+                    <QueryType>SELECT</QueryType>
+                    <OutputColumns>
+                        <Column>id</Column>
+                    </OutputColumns>
+                    <Tables>
+                        <Table>groups</Table>
+                    </Tables>
+                    <Where>
+                        <Conditions>
+                            <Condition>
+                                <Body>c_val = 3</Body>
+                            </Condition>
+                        </Conditions>
+                    </Where>
+                </Operation>
+            </Condition>
+        </Conditions>
+    </Where>
+</Operation>

@@ -1,0 +1,11 @@
+<Operation>
+    <Type>DELETE</Type>
+    <Table>students</Table>
+    <Where>
+        <Conditions>
+            <Condition>
+                <Body>id = 1</Body>
+            </Condition>
+        </Conditions>
+    </Where>
+</Operation>

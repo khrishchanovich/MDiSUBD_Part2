@@ -1,0 +1,4 @@
+<Operation>
+    <Type>DROP</Type>
+    <Table>mytable</Table>
+</Operation>

@@ -1,0 +1,33 @@
+<Operation>
+    <Type>CREATE</Type>
+    <Table>mytable</Table>
+    <Columns>
+        <Column>
+            <Name>col_1</Name>
+            <Type>NUMBER</Type>
+        </Column>
+        <Column>
+            <Name>col_2</Name>
+            <Type>VARCHAR(100)</Type>
+            <Constraints>
+                <Constraint>NOT NULL</Constraint>
+            </Constraints>
+        </Column>
+    </Columns>
+    <TableConstraints>
+        <PrimaryKey>
+            <Columns>
+                <Column>col_1</Column>
+            </Columns>
+        </PrimaryKey>
+        <ForeignKey>
+            <ChildColumns>
+                <Column>col_2</Column>
+            </ChildColumns>
+            <Parent>other_table</Parent>
+            <ParentColumns>
+                <Column>id</Column>
+            </ParentColumns>
+        </ForeignKey>
+    </TableConstraints>
+</Operation>

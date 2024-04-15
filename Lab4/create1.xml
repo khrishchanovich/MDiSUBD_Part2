@@ -1,0 +1,34 @@
+<Operation>
+    <Type>CREATE</Type>
+    <Table>other_table</Table>
+    <Columns>
+        <Column>
+            <Name>id</Name>
+            <Type>NUMBER</Type>
+	    <Constraints>
+                <Constraint>UNIQUE</Constraint>
+            </Constraints>
+        </Column>
+        <Column>
+            <Name>col_1</Name>
+            <Type>NUMBER</Type>
+            <Constraints>
+		<Constraint>UNIQUE</Constraint>
+            </Constraints>
+        </Column>
+	<Column>
+            <Name>col_2</Name>
+            <Type>NUMBER</Type>
+            <Constraints>
+		<Constraint>NOT NULL</Constraint>
+            </Constraints>
+        </Column>
+    </Columns>
+    <TableConstraints>
+        <PrimaryKey>
+            <Columns>
+                <Column>col_2</Column>
+            </Columns>
+        </PrimaryKey>
+    </TableConstraints>
+</Operation>

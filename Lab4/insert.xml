@@ -1,0 +1,12 @@
+<Operation>
+    <Type>INSERT</Type>
+    <Table>students</Table>
+    <Columns>
+        <Column>name</Column>
+        <Column>group_id</Column>
+    </Columns>
+    <Values>
+        <Value>'krtfds'</Value>
+        <Value>3</Value>
+    </Values>
+</Operation>
