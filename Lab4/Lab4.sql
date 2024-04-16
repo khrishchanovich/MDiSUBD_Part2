@@ -141,7 +141,7 @@ BEGIN
 END;
 
 BEGIN
-    DBMS_OUTPUT.put_line(xml_package.xml_update(read('update.xml')));
+    DBMS_OUTPUT.put_line(xml_package.xml_update(read('test_update.xml')));
 END;
 
 BEGIN
@@ -177,14 +177,8 @@ BEGIN
 END;
 
 BEGIN
-    DBMS_OUTPUT.put_line(xml_package.xml_create(read('create_t1.xml')));
-END;
-CREATE TABLE t1( id NUMBER,  num NUMBER,  var VARCHAR(100), CONSTRAINT t1_pk PRIMARY KEY (id));
-
-BEGIN
     DBMS_OUTPUT.put_line(xml_package.xml_create(read('create_t2.xml')));
 END;
-CREATE TABLE t2( id NUMBER,  num NUMBER,  var VARCHAR(100),  t1_k NUMBER, CONSTRAINT t2_pk PRIMARY KEY (id), CONSTRAINT t2_t1_fk Foreign Key(t1_k) REFERENCES t1(id));
 
 DECLARE
     v_sql VARCHAR2(4000);
@@ -195,3 +189,49 @@ BEGIN
     open cur for v_sql;
     DBMS_SQL.RETURN_RESULT(cur);
 END;
+
+
+BEGIN
+    DBMS_OUTPUT.put_line(xml_package.xml_create(read('test_1.xml')));
+END;
+CREATE TABLE Users( UserId NUMBER,  UserName VARCHAR(50) NOT NULL ,  UserAge NUMBER NOT NULL , CONSTRAINT Users_pk PRIMARY KEY (UserId));
+BEGIN
+    DBMS_OUTPUT.put_line(xml_package.xml_create(read('test_2.xml')));
+END;
+CREATE TABLE Orders( OrderId NUMBER,  UserId NUMBER,  OrderDate DATE,  TotalAmount NUMBER(10,2), CONSTRAINT Orders_pk PRIMARY KEY (OrderId), CONSTRAINT Orders_Users_fk Foreign Key(UserId) REFERENCES Users(UserId));
+BEGIN
+    DBMS_OUTPUT.put_line(xml_package.xml_create(read('test_3.xml')));
+END;
+CREATE TABLE Products( ProductId NUMBER,  ProductName VARCHAR(2) NOT NULL ,  UserAge NUMBER(10,2) NOT NULL , CONSTRAINT Products_pk PRIMARY KEY (ProductId));
+
+BEGIN
+    DBMS_OUTPUT.put_line(xml_package.xml_insert(read('insert_test_1.xml')));
+END;
+
+INSERT INTO Users(UserId, UserName, UserAge) VALUES (1, 'John', 3);
+INSERT INTO Users(UserId, UserName, UserAge) VALUES (2, 'Alice', 25);
+INSERT INTO Users(UserId, UserName, UserAge) VALUES (3, 'Bob', 35);
+
+BEGIN
+    DBMS_OUTPUT.put_line(xml_package.xml_insert(read('insert_test_2.xml')));
+END;
+INSERT INTO Orders(OrderId, UserId, OrderDate, TotalAmount) VALUES (1, 1, TO_DATE('2024-01-15', 'YYYY-MM-DD'), 100.00);
+INSERT INTO Orders(OrderId, UserId, OrderDate, TotalAmount) VALUES (2, 2, TO_DATE('2024-02-20', 'YYYY-MM-DD'), 150.00);
+INSERT INTO Orders(OrderId, UserId, OrderDate, TotalAmount) VALUES (3, 3, TO_DATE('2024-03-25', 'YYYY-MM-DD'), 200.00);
+
+INSERT INTO Products (ProductID, ProductName, Price) VALUES (101, 'Product A', 50.00);
+INSERT INTO Products (ProductID, ProductName, Price) VALUES (102, 'Product B', 75.00);
+INSERT INTO Products (ProductID, ProductName, Price) VALUES (103, 'Product C', 100.00);
+
+DECLARE
+    v_sql VARCHAR2(4000);
+    cur sys_refcursor;
+BEGIN
+    DBMS_OUTPUT.put_line(xml_package.xml_select(DBMS_LOB.SUBSTR(read('test_4.xml'), 4000)));
+    v_sql := xml_package.xml_select(DBMS_LOB.SUBSTR(read('test_4.xml'), 4000));
+    open cur for v_sql;
+    DBMS_SQL.RETURN_RESULT(cur);
+END;
+
+select * from users;
+UPDATE Users SET UserName = 'Lola' WHERE Users.UserId = 2 OR  Users.UserName = 'Alice'  ;

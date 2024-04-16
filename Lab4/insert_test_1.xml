@@ -1,0 +1,12 @@
+<Operation>
+    <Type>INSERT</Type>
+    <Table>Users</Table>
+    <Columns>
+        <Column>UserId</Column>
+        <Column>UserName</Column>
+	<Column>UserAge</Column>
+    </Columns>
+    <Values>
+        <Value>1, 'John', 3</Value>
+    </Values>
+</Operation>

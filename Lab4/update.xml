@@ -1,13 +1,13 @@
 <Operation>
     <Type>UPDATE</Type>
-    <Table>students</Table>
+    <Table>Users</Table>
     <SetOperations>
-        <Set>name = 'kate'</Set>
+        <Set>Users.UserName = 'Lola'</Set>
     </SetOperations>
     <Where>
         <Conditions>
             <Condition>
-                <Body>students.id = 5</Body>
+                <Body>Users.UserId = 2</Body>
                 <ConditionOperator>OR</ConditionOperator>
             </Condition>
             <Condition>

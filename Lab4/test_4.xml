@@ -1,0 +1,32 @@
+<Operation>
+    <QueryType>SELECT</QueryType>
+    <OutputColumns>
+        <Column>Users.UserName</Column>
+	<Column>Orders.OrderDate</Column>
+	<Column>Products.ProductName</Column>
+    </OutputColumns>
+    <Tables>
+        <Table>Users</Table>
+	<Table>Orders</Table>
+	<Table>Products</Table>
+    </Tables>
+    <Joins>
+        <Join>
+            <Type>JOIN</Type>
+            <Condition>Users.UserId = Orders.UserId</Condition>
+        </Join>
+	<Join>
+            <Type>JOIN</Type>
+            <Condition>Orders.TotalAmount BETWEEN 100 AND 200</Condition>
+        </Join>
+    </Joins>
+    <Where>
+        <Conditions>
+            <Condition>
+		<Body>Users.UserName</Body>
+		<ConditionOperator>LIKE</ConditionOperator>
+		<Pattern>B%</Pattern>
+	    </Condition>
+        </Conditions>
+    </Where>
+</Operation>

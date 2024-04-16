@@ -1,0 +1,31 @@
+<Operation>
+	<Type>CREATE</Type>
+	<Table>Products</Table>
+	<Columns>
+		<Column>
+			<Name>ProductId</Name>
+			<Type>NUMBER</Type>
+		</Column>
+		<Column>
+			<Name>ProductName</Name>
+			<Type>VARCHAR(2)</Type>
+			<Constraints>
+				<Constraint>NOT NULL</Constraint>
+			</Constraints>
+		</Column>
+		<Column>
+			<Name>UserAge</Name>
+			<Type>NUMBER(10,2)</Type>
+			<Constraints>
+				<Constraint>NOT NULL</Constraint>
+			</Constraints>
+		</Column>
+    	</Columns>
+	<TableConstraints>
+		<PrimaryKey>
+			<Columns>
+				<Column>ProductId</Column>
+			</Columns>
+		</PrimaryKey>
+	</TableConstraints>
+</Operation>

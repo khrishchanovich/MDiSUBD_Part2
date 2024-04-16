@@ -1,0 +1,13 @@
+<Operation>
+    <Type>INSERT</Type>
+    <Table>Orders</Table>
+    <Columns>
+        <Column>OrderId</Column>
+        <Column>UserId</Column>
+	<Column>OrderDate</Column>
+	<Column>TotalAmount</Column>
+    </Columns>
+    <Values>
+        <Value>1, 1, TO_DATE('2024-01-15', 'YYYY-MM-DD'), 100.00</Value>
+    </Values>
+</Operation>

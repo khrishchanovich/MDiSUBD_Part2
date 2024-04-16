@@ -1,0 +1,18 @@
+<Operation>
+    <Type>UPDATE</Type>
+    <Table>Users</Table>
+    <SetOperations>
+        <Set>UserName = 'Lola'</Set>
+    </SetOperations>
+    <Where>
+        <Conditions>
+            <Condition>
+                <Body>Users.UserId = 2</Body>
+                <ConditionOperator>OR</ConditionOperator>
+            </Condition>
+            <Condition>
+                <Body>Users.UserName = 'Alice'</Body>
+            </Condition>
+        </Conditions>
+    </Where>
+</Operation>
