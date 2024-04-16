@@ -1,0 +1,50 @@
+<Operation>
+    <QueryType>SELECT</QueryType>
+    <OutputColumns>
+        <Column>*</Column>
+    </OutputColumns>
+    <Tables>
+        <Table>t1</Table>
+	<Table>t2</Table>
+    </Tables>
+    <Joins>
+        <Join>
+            <Type>RIGHT JOIN</Type>
+            <Condition>t2.t1_k= t1.id</Condition>
+        </Join>
+    </Joins>
+    <Where>
+        <Conditions>
+            <Condition>
+                <Body>t1.id IN</Body>
+			<Operation>
+				<QueryType>SELECT</QueryType>
+				<OutputColumns>
+					<Column>id</Column>
+				</OutputColumns>
+				<Tables>
+                        		<Table>t2</Table>
+                    		</Tables>
+				<Where>
+					<Conditions>
+						<Condition>
+							<Body>num</Body>
+							<ConditionOperator>BETWEEN</ConditionOperator>
+							<LowerBound>2</LowerBound>
+							<UpperBound>4</UpperBound>
+						</Condition>
+						<Condition>
+							<ConditionOperator>AND</ConditionOperator>
+						</Condition>
+						<Condition>
+							<Body>var</Body>
+							<ConditionOperator>LIKE</ConditionOperator>
+							<Pattern>%a%</Pattern>
+						</Condition>
+					</Conditions>
+				</Where>
+			</Operation>
+            </Condition>
+        </Conditions>
+    </Where>
+</Operation>

@@ -463,7 +463,7 @@ END LOOP;
                             '('              || 
                             temporal_string  || 
                             ') ';
-            temporal_record := get_value_from_xml(table_constraints(i), 'ForeignKey/ChildColumns/Column');
+            temporal_record := get_value_from_xml(table_constraints(i), 'ForeignKey/ParentColumns/Column');
             temporal_string := temporal_record(1);
     
             FOR i in 2..temporal_record.count 
@@ -552,44 +552,8 @@ INSERT INTO Students(name, group_id) VALUES('R', 3);
 SELECT * FROM Students;
 SELECT * FROM Groups;
 
-
--- task 1-2
-DECLARE 
-    cur  sys_refcursor;
-BEGIN
-    cur := xml_package.process_select( 
-    /*XML*/
-    '<Operation>
-        <QueryType>SELECT</QueryType>
-        <OutputColumns>
-            <Column>students.id</Column>
-            <Column>students.name</Column>
-            <Column>groups.id</Column>
-        </OutputColumns>
-        <Tables>
-            <Table>students</Table>
-            <Table>groups</Table>
-        </Tables>
-        <Joins>
-            <Join>
-                <Type>LEFT JOIN</Type>
-                <Condition>groups.id = students.group_id</Condition>
-            </Join>
-        </Joins>
-        <Where>
-            <Conditions>
-                <Condition>
-                    <Body>students.id = 1</Body>
-                </Condition>
-            </Conditions>
-        </Where>
-    </Operation>'
-    /*XML*/
-    ); 
-END;
-
 DECLARE
-    v_sql VARCHAR2(4000); -- Замените 4000 на достаточную длину для вашего запроса
+    v_sql VARCHAR2(4000);
     cur sys_refcursor;
 BEGIN
     DBMS_OUTPUT.put_line(xml_package.xml_select(DBMS_LOB.SUBSTR(read('select.xml'), 4000)));
@@ -599,15 +563,13 @@ BEGIN
 END;
 
 DECLARE
-    v_sql CLOB; -- Замените 4000 на достаточную длину для вашего запроса
+    v_sql CLOB;
     v_sql_string VARCHAR2(32767);
 BEGIN
     DBMS_OUTPUT.put_line(xml_package.xml_create(DBMS_LOB.SUBSTR(read('create1.xml'), 4000)));
     v_sql := xml_package.xml_create(DBMS_LOB.SUBSTR(read('create1.xml'), 10000));
 
     v_sql_string := TO_CHAR(v_sql);
-
-    -- Выполняем SQL запрос
     EXECUTE IMMEDIATE v_sql_string;
 END;
 
@@ -678,24 +640,38 @@ DECLARE
     v_sql CLOB;
     cur sys_refcursor;
 BEGIN
-    -- Получаем SQL запрос в виде CLOB
     v_sql := xml_package.xml_create(DBMS_LOB.SUBSTR(read('create1.xml'), 10000));
     
     open cur for v_sql;
-    -- Выполняем SQL запрос
     EXECUTE IMMEDIATE cur;
-    
-    -- Выводим сообщение об успешном выполнении
     DBMS_OUTPUT.put_line('Таблица успешно создана.');
 EXCEPTION
     WHEN OTHERS THEN
-        -- Обработка ошибок
         DBMS_OUTPUT.put_line('Ошибка при создании таблицы: ' || SQLERRM);
 END;
 
 CREATE TABLE mytable( col_1 NUMBER,  col_2 VARCHAR(100)  NOT NULL, CONSTRAINT mytable_pk PRIMARY KEY (col_1), CONSTRAINT mytable_other_table_fk Foreign Key(col_2) REFERENCES other_table(col_2));
 
-
 BEGIN
     DBMS_OUTPUT.put_line(xml_package.xml_drop(read('drop.xml')));
+END;
+
+BEGIN
+    DBMS_OUTPUT.put_line(xml_package.xml_create(read('create_t1.xml')));
+END;
+CREATE TABLE t1( id NUMBER,  num NUMBER,  var VARCHAR(100), CONSTRAINT t1_pk PRIMARY KEY (id));
+
+BEGIN
+    DBMS_OUTPUT.put_line(xml_package.xml_create(read('create_t2.xml')));
+END;
+CREATE TABLE t2( id NUMBER,  num NUMBER,  var VARCHAR(100),  t1_k NUMBER, CONSTRAINT t2_pk PRIMARY KEY (id), CONSTRAINT t2_t1_fk Foreign Key(t1_k) REFERENCES t1(id));
+
+DECLARE
+    v_sql VARCHAR2(4000);
+    cur sys_refcursor;
+BEGIN
+    DBMS_OUTPUT.put_line(xml_package.xml_select(DBMS_LOB.SUBSTR(read('select_task.xml'), 4000)));
+    v_sql := xml_package.xml_select(DBMS_LOB.SUBSTR(read('select_task.xml'), 4000));
+    open cur for v_sql;
+    DBMS_SQL.RETURN_RESULT(cur);
 END;
