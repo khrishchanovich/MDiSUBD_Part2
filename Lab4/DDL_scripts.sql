@@ -72,18 +72,18 @@ BEGIN
 END;
 
 DECLARE
-    v_ddl_script CLOB;
-    v_table_name VARCHAR2(100);
+    v_ddl_script       CLOB;
+    v_table_name       VARCHAR2(100);
     v_generated_script VARCHAR2(1000);
 BEGIN
-    v_ddl_script := xml_package.xml_create(read('create_t1.xml'));
-    v_table_name := SUBSTR(v_ddl_script, INSTR(v_ddl_script, 'CREATE TABLE') + LENGTH('CREATE TABLE') + 1,
-                           INSTR(SUBSTR(v_ddl_script, INSTR(v_ddl_script, 'CREATE TABLE') + LENGTH('CREATE TABLE') + 1), '(') - 1);
-    v_table_name := TRIM(v_table_name);
+    v_ddl_script := xml_package.xml_create(read('check.xml'));
+    v_table_name := substr(v_ddl_script, instr(v_ddl_script, 'CREATE TABLE') + length('CREATE TABLE') + 1, instr(substr(v_ddl_script,
+    instr(v_ddl_script, 'CREATE TABLE') + length('CREATE TABLE') + 1), '(') - 1);
+
+    v_table_name := trim(v_table_name);
     v_generated_script := auto_increment_generator(v_table_name);
-    
-    DBMS_OUTPUT.put_line(v_ddl_script);
-    DBMS_OUTPUT.put_line(v_generated_script);
+    dbms_output.put_line(v_ddl_script);
+    dbms_output.put_line(v_generated_script);
 END;
 
 CREATE OR REPLACE PACKAGE BODY xml_package AS
@@ -157,9 +157,7 @@ CREATE OR REPLACE PACKAGE BODY xml_package AS
 
         END LOOP;
 
-        select_query := select_query || where_property(xml_string); 
-        -- DBMS_OUTPUT.PUT_LINE(select_query);
-
+        select_query := select_query || where_property(xml_string);
         RETURN select_query;
     END xml_select;
 
@@ -443,16 +441,25 @@ CREATE OR REPLACE PACKAGE BODY xml_package AS
         auto_increment_script VARCHAR(1000);
         col_name              VARCHAR2(100);
         parent_table          VARCHAR2(100);
+        
+        check_name        VARCHAR2(100);
+        check_expression  VARCHAR2(100);
+        check_constraint_query xml_record := xml_record();
+            
+            
+        constraint_name       VARCHAR2(100);
         constraint_value      VARCHAR2(100);
         temporal_string       VARCHAR2(100);
         table_name            VARCHAR2(100);
         current_record        VARCHAR2(1000);
         primary_constraint    VARCHAR2(1000);
+        check_constraints       VARCHAR2(1000);
         create_query          VARCHAR2(1000) := 'CREATE TABLE';
         i                     NUMBER := 0;
         records_length        NUMBER := 0;
         table_columns         xml_record := xml_record();
         temporal_record       xml_record := xml_record();
+        name_check xml_record := xml_record();
         col_constraints       xml_record := xml_record();
         table_constraints     xml_record := xml_record();
     BEGIN
@@ -511,8 +518,7 @@ CREATE OR REPLACE PACKAGE BODY xml_package AS
                                     || ' '
                                     || col_constraints(i);
             END LOOP;
-    
-    -- Добавление пробела, если constraint_value не равно NULL
+
             IF constraint_value IS NOT NULL THEN
                 constraint_value := constraint_value || ' ';
             END IF;
@@ -556,6 +562,66 @@ CREATE OR REPLACE PACKAGE BODY xml_package AS
             auto_increment_script := auto_increment_generator(table_name);
             create_query := create_query || ', ID NUMBER PRIMARY KEY';
         END IF;
+    
+    -- Обработка ограничений CHECK
+        table_constraints := xml_record();
+        records_length := 0;
+        i := 0;
+        SELECT
+            extract(xmltype(xml_string), 'Operation/TableConstraints/Check').getstringval()
+        INTO current_record
+        FROM
+            dual;
+
+        WHILE current_record IS NOT NULL LOOP
+            i := i + 1;
+            records_length := records_length + 1;
+            table_constraints.extend;
+            table_constraints(records_length) := trim(current_record);
+            SELECT
+                extract(xmltype(xml_string), 'Operation/TableConstraints/Check'
+                                             || '['
+                                             || i
+                                             || ']').getstringval()
+            INTO current_record
+            FROM
+                dual;
+
+        END LOOP;
+
+        FOR i IN 2..table_constraints.count LOOP
+            SELECT
+                extractvalue(xmltype(table_constraints(i)),
+                             'Check/Name')
+            INTO check_name
+            FROM
+                dual;
+                
+            SELECT
+                extractvalue(xmltype(table_constraints(i)),
+                             'Check/Expression')
+            INTO check_expression
+            FROM
+                dual;
+
+            temporal_record := get_record_from_xml(table_constraints(i), 'Check/Name');
+            temporal_string := temporal_record(1);
+            FOR i IN 2..temporal_record.count LOOP
+                temporal_string := temporal_string
+                                   || ', '
+                                   || temporal_record(i);
+            END LOOP;
+
+            create_query := create_query
+                            || ', CONSTRAINT '
+                            || check_name
+                            || ' CHECK '
+                            || '('
+                            || check_expression 
+                            || ') ';
+
+        END LOOP;
+
 
         table_constraints := xml_record();
         records_length := 0;

@@ -7,7 +7,7 @@ DROP TABLE Groups;
 CREATE TABLE Groups (
     id NUMBER PRIMARY KEY NOT NULL,
     name VARCHAR2(20) NOT NULL,
-    c_val NUMBER DEFAULT 0 NOT NULL -- number of Students in the group
+    c_val NUMBER DEFAULT 0 NOT NULL
 );
 
 CREATE TABLE Students (
@@ -235,3 +235,14 @@ END;
 
 select * from users;
 UPDATE Users SET UserName = 'Lola' WHERE Users.UserId = 2 OR  Users.UserName = 'Alice'  ;
+
+
+CREATE SEQUENCE t1_pk_seq;
+CREATE OR REPLACE TRIGGER t1 BEFORE INSERT ON t1 FOR EACH ROW 
+BEGIN 
+ IF inserting THEN 
+ IF :NEW.ID IS NULL THEN 
+ SELECT t1_pk_seq.nextval INTO :NEW.ID FROM dual; 
+ END IF; 
+ END IF; 
+END;

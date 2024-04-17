@@ -1,0 +1,33 @@
+<Operation>
+    <Type>CREATE</Type>
+    <Table>employees</Table>
+    <Columns>
+        <Column>
+            <Name>id</Name>
+            <Type>NUMBER</Type>
+        </Column>
+        <Column>
+            <Name>salary</Name>
+            <Type>NUMBER</Type>
+        </Column>
+	<Column>
+            <Name>name</Name>
+            <Type>VARCHAR(100)</Type>
+        </Column>
+    </Columns>
+    <TableConstraints>
+        <PrimaryKey>
+            <Columns>
+                <Column>id</Column>
+            </Columns>
+        </PrimaryKey>
+        <Check>
+		<Name>chk_salary</Name>
+		<Expression>salary &lt; 0</Expression>
+	</Check>
+	<Check>
+		<Name>chk_sa</Name>
+		<Expression>salary &lt; 353</Expression>
+	</Check>
+    </TableConstraints>
+</Operation>

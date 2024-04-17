@@ -34,5 +34,14 @@
                 <Column>id</Column>
             </ParentColumns>
         </ForeignKey>
+	<ForeignKey>
+            <ChildColumns>
+                <Column>t1_k</Column>
+            </ChildColumns>
+            <Parent>t1</Parent>
+            <ParentColumns>
+                <Column>id</Column>
+            </ParentColumns>
+        </ForeignKey>
     </TableConstraints>
 </Operation>
