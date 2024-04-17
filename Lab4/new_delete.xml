@@ -14,11 +14,12 @@
         			<Table>other_table</Table>
     			</Tables>
 			<Where>
-			<Conditions>
-				<Condition>condition</Condition>
-			</Conditions>
+				<Conditions>
+					<Condition>
+						<Body>condition</Body>
+					</Condition>
+				</Conditions>
 			</Where>
-
 		</Operation>
             </Condition>
         </Conditions>

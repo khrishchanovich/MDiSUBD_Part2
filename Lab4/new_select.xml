@@ -1,0 +1,32 @@
+<Operation>
+    <QueryType>SELECT</QueryType>
+    <OutputColumns>
+        <Column>*</Column>
+    </OutputColumns>
+    <Tables>
+        <Table>your_table</Table>
+    </Tables>
+    <Where>
+        <Conditions>
+            <Condition>
+                <Body>column_name IN</Body>
+                <Operation>
+                    <QueryType>SELECT</QueryType>
+                    <OutputColumns>
+                        <Column>column_name</Column>
+                    </OutputColumns>
+                    <Tables>
+                        <Table>other_table</Table>
+                    </Tables>
+                    <Where>
+                        <Conditions>
+                            <Condition>
+                                <Body>condition</Body>
+                            </Condition>
+                        </Conditions>
+                    </Where>
+                </Operation>
+            </Condition>
+        </Conditions>
+    </Where>
+</Operation>

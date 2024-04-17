@@ -1,0 +1,25 @@
+<Operation>
+    <Type>INSERT</Type>
+    <Table>YourTable</Table>
+    <Columns>
+        <Column>column1</Column>
+        <Column>column2</Column>
+    </Columns>
+    <Operation>
+	<QueryType>SELECT</QueryType>
+	<OutputColumns>
+        	<Column>value1</Column>
+        	<Column>value2</Column>
+    	</OutputColumns>
+	<Tables>
+        	<Table>source_table</Table>
+    	</Tables>
+	<Where>
+        <Conditions>
+            <Condition>
+                <Body>condition</Body>
+            </Condition>
+	</Conditions>
+	</Where>
+    </Operation>
+</Operation>
